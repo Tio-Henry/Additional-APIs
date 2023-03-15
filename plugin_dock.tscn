@@ -1,4 +1,7 @@
-[gd_scene format=3 uid="uid://by1nwl6c0aywy"]
+[gd_scene load_steps=3 format=3 uid="uid://by1nwl6c0aywy"]
+
+[ext_resource type="Script" path="res://addons/Additional-APIs/scripts/plugin_dock.gd" id="1_h1uw6"]
+[ext_resource type="Texture2D" uid="uid://q0xmfukbkdu5" path="res://addons/Additional-APIs/icons/gamejolt.png" id="1_r6n1r"]
 
 [node name="plugin_dock" type="Control"]
 layout_mode = 3
@@ -7,8 +10,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_h1uw6")
 
-[node name="game_jolt_btn" type="TextureButton" parent="."]
+[node name="game_jolt_btn" type="Button" parent="."]
 layout_mode = 0
-offset_right = 53.0
-offset_bottom = 53.0
+offset_right = 58.0
+offset_bottom = 58.0
+focus_mode = 0
+icon = ExtResource("1_r6n1r")
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="pressed" from="game_jolt_btn" to="." method="_on_game_jolt_btn_pressed"]
