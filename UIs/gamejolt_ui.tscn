@@ -1,75 +1,95 @@
-[gd_scene format=3 uid="uid://lv8cgsv2giwo"]
+[gd_scene load_steps=3 format=3 uid="uid://lv8cgsv2giwo"]
+
+[ext_resource type="Theme" uid="uid://dwodd76qk0wsh" path="res://theme.tres" id="1_odm68"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5n44a"]
+bg_color = Color(0.164706, 0.164706, 0.164706, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.901961, 0.717647, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 2.0
+shadow_size = 4
 
 [node name="gamejolt_ui" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 133.0
+offset_left = 158.0
+offset_top = 16.0
+offset_right = -23.0
+offset_bottom = -15.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_odm68")
 
-[node name="Control" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 19.0
-offset_right = 234.0
-offset_bottom = 288.0
-
-[node name="Label" type="Label" parent="Control"]
+[node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -113.5
-offset_bottom = -90.5
+anchor_bottom = 1.0
+offset_right = 23.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Game ID:"
+theme = ExtResource("1_odm68")
+color = Color(0.0352941, 0.0352941, 0.0352941, 0.466667)
 
-[node name="LineEdit" type="LineEdit" parent="Control"]
+[node name="PanelContainer" type="VSplitContainer" parent="."]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -85.5
-offset_bottom = -54.5
+offset_left = 10.0
+offset_top = 20.0
+offset_right = -71.0
+offset_bottom = 102.0
 grow_horizontal = 2
-grow_vertical = 2
+theme = ExtResource("1_odm68")
+dragger_visibility = 1
 
-[node name="Label2" type="Label" parent="Control"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -40.5
-offset_bottom = -17.5
-grow_horizontal = 2
-grow_vertical = 2
+[node name="private_key" type="Label" parent="PanelContainer"]
+layout_mode = 2
+theme = ExtResource("1_odm68")
 text = "Private Key:"
 
-[node name="LineEdit2" type="LineEdit" parent="Control"]
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/private_key"]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -15.5
-offset_bottom = 15.5
-grow_horizontal = 2
-grow_vertical = 2
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -30.0
+offset_right = -5.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("1_odm68")
+text = "aaaaa"
 
-[node name="save" type="Button" parent="Control"]
+[node name="game_id" type="Label" parent="PanelContainer"]
+layout_mode = 2
+theme = ExtResource("1_odm68")
+text = "Game ID:"
+
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/game_id"]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 1
+anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = 27.0
-offset_bottom = 58.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Save
-"
+offset_left = -170.0
+offset_top = -4.0
+offset_right = -5.0
+offset_bottom = 27.0
+grow_horizontal = 0
+theme = ExtResource("1_odm68")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5n44a")
+text = "aaaaaa"
