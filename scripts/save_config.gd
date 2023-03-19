@@ -1,8 +1,15 @@
 extends Node
 
-var _config = ConfigFile.new()
-
-var _gj_save: Dictionary = {
+var gamejolt_file: String = "res://addons/.data_dev/Additional-APIs/gamejolt_info.cfg"
+var gamejolt_info: Dictionary = {
 	"game_id" : "",
 	"privated_key" : ""
 }
+
+func _save_cfg(api, file):
+	var _file = FileAccess.open(file, FileAccess.WRITE)
+	_file.store_string(api)
+	
+func _load_cfg(api, file):
+	var _file = FileAccess.open(file, FileAccess.READ)
+	api = _file.get_as_text()
