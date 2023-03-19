@@ -80,4 +80,5 @@ text = "Save"
 icon_alignment = 2
 expand_icon = true
 
-[connection signal="pressed" from="VSplitContainer/game_jolt_btn" to="." method="_on_game_jolt_btn_pressed"]
+[connection signal="toggled" from="VSplitContainer/game_jolt_btn" to="." method="_on_game_jolt_btn_toggled"]
+[connection signal="pressed" from="save_btn" to="." method="_on_save_btn_pressed"]
