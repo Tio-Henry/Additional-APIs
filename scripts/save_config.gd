@@ -3,7 +3,7 @@ extends Node
 var gamejolt_file: String = "res://addons/.data_dev/Additional-APIs/gamejolt_info.cfg"
 var gamejolt_info: Dictionary = {
 	"game_id" : "",
-	"privated_key" : ""
+	"private_key" : ""
 }
 
 func _save_cfg(api, file):
