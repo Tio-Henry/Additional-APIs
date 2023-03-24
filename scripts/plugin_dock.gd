@@ -1,7 +1,8 @@
 extends Control
 
 func _on_save_btn_pressed():
-	_SaveCFG._save_cfg(_SaveCFG.gamejolt_info)
+  _SaveCFG.gamejolt_info["game_id"] = $plugin_dock/
+	_SaveCFG._save_cfg()
 	pass
 
 
