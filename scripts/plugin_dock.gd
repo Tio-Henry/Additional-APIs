@@ -1,7 +1,11 @@
 extends Control
 
+func _ready():
+  _SaveCFG.load_cfg()
+
 func _on_save_btn_pressed():
-  _SaveCFG.gamejolt_info["game_id"] = $plugin_dock/
+  _SaveCFG.gamejolt_info["game_id"] = 
+  _SaveCFG.gamejolt_info["private_key"] = 
 	_SaveCFG._save_cfg()
 	pass
 
