@@ -6,8 +6,9 @@ var gamejolt_info = {
 	"game_id" : "",
 	"private_key" : ""
 }
-func _save_cfg(value):
-#	file_cfg.set_value()
+func _save_cfg():
+	file_cfg.set_value("Game Jolt API","game_id", gamejolt_info["game_id"])
+
 	pass
 	
 func _load_cfg(value, file):
