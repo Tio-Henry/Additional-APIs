@@ -1,6 +1,5 @@
 @tool
 extends EditorPlugin
-
 var plugin_dock = preload("res://addons/Additional-APIs/plugin_dock.tscn").instantiate()
 
 func _enter_tree():

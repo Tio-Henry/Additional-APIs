@@ -2,6 +2,17 @@ extends Node
 
 var web = "https://api.gamejolt.com/api/game/v1_2/"
 var _http_request = HTTPRequest.new()
+var _user_info: String = "user://Additional-APIs/data_user.dat"
+var data_user: Dictionary = {
+	"username":"",
+	"user_token":""
+}
+
+func login_GJ(username: String, user_token: String):
+	data_user["username"] = username
+	data_user["user_token"] = user_token
+	var file = FileAccess.open(_user_info, FileAccess.WRITE)
+	file.store_var(data_user)
 
 func connect_api(TYPE: String):
 	if FileAccess.file_exists(_SaveCFG.gamejolt_file):
