@@ -6,6 +6,41 @@ var data_user: Dictionary = {
 }
 var user_file: String = "user://gj-credentials.dat"
 enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS}
+func _ready():
+	_SaveCFG.load_cfg()
+	if FileAccess.file_exists(".gj-credentials"):
+		var file = FileAccess.open(".gj-credentials",FileAccess.READ)
+		var data = {}
+		for i in range(3):
+			data.merge({i : file.get_line()})
+		await user_login(data[1],data[2])
+	else:
+		if FileAccess.file_exists(user_file):
+			var file = FileAccess.open(user_file,FileAccess.READ)
+			data_user = file.get_var()
+
+func user_auth(username: String, user_token: String):
+	var code = "&username=" + username + "&user_token=" + user_token
+	return await connect_api("users/auth", false, USER, code)
+
+func username_fetch(username: String):
+	var code = "&username=" + username
+	return await connect_api("users", false, USER, code)
+
+func user_id_fetch(user_id: int):
+	var code = "&user_id=" + str(user_id)
+	return await connect_api("users", false, USER, code)
+
+func user_login(username: String, user_token: String):
+	if await user_auth(username, user_token) == "true":
+		data_user["username"] = username
+		data_user["user_token"] = user_token
+		var data = await username_fetch(username)
+		data_user["user_id"] = data["id"]
+		_SaveCFG.data_save(data_user,user_file)
+		return true
+	else:
+		return false
 
 func connect_api(type: String, require_user: bool, action_type, code:= ""):
 	if FileAccess.file_exists(_SaveCFG.file_cfg):
