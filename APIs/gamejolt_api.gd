@@ -6,6 +6,7 @@ var data_user: Dictionary = {
 }
 var user_file: String = "user://gj-credentials.dat"
 enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS}
+
 func _ready():
 	_SaveCFG.load_cfg()
 	if FileAccess.file_exists(".gj-credentials"):
@@ -18,6 +19,101 @@ func _ready():
 		if FileAccess.file_exists(user_file):
 			var file = FileAccess.open(user_file,FileAccess.READ)
 			data_user = file.get_var()
+
+func data_fetch(require_user: bool,key: String):
+	var code = "&key=" + key
+	return await connect_api("data_store",require_user,DATA_STORE,code)
+
+func data_get_keys(require_user: bool,pattern:= ""):
+	var code = ""
+	if pattern != "":
+		code = "&pattern=" + pattern
+	return await connect_api("data_store/get_keys",require_user,DATA_STORE,code)
+
+func data_remove(require_user: bool,key: String):
+	var code = "&key=" + key
+	return await connect_api("data_store/remove",require_user,DATA_STORE,code)
+	
+func data_set(require_user: bool,key: String,data: String):
+	var code = "&key=" + key + "&data=" + data
+	return await connect_api("data_store/set",require_user,DATA_STORE,code)
+
+func data_update(require_user: bool,key: String,operation: String,value: String):
+	var code = "&key=" + key + "&operation=" + operation + "&value=" + value
+	return await connect_api("data_store/update",require_user,DATA_STORE,code)
+
+func friends_list():
+	return await connect_api("friends",true,FRIENDS)
+
+func sessions_check():
+	return await connect_api("sessions/check",true,SESSIONS)
+
+func sessions_close():
+	return await connect_api("sessions/close",true,SESSIONS)
+
+func sessions_open():
+	return await connect_api("sessions/open",true,SESSIONS)
+
+func sessions_ping(status:=""):
+	var code = ""
+	if status != "":
+		code = "&status=" + status
+	return await connect_api("sessions/ping",true,SESSIONS,code)
+
+func scores_add(require_user: bool,score:String,sort:int,table_id:int=0,guest:String="",extra_data:String=""):
+	var code = "&score=" + score + "&sort=" + str(sort)
+	if table_id != 0:
+		code += "&table_id=" + str(table_id)
+	if guest != "":
+		code += "&guest=" + guest
+	if extra_data != "":
+		code += "&extra_data=" + extra_data 
+	return await connect_api("scores/add",require_user,SCORES,code)
+
+func scores_fetch(require_user: bool,table_id:int=0,limit:int=0,better_than:int=0,worse_than:int=0,guest:String=""):
+	var code = ""
+	if table_id != 0:
+		code += "&table_id=" + str(table_id)
+	if limit != 0:
+		code += "&limit=" + str(limit)
+	if better_than != 0:
+		code += "&better_than=" + str(better_than)
+	if worse_than != 0:
+		code += "&worse_than=" + str(worse_than)
+	if guest != "":
+		code += "&guest=" + guest
+	return await connect_api("scores",require_user,SCORES,code)
+
+func scores_get_rank(sort:int,table_id:int=0):
+	var code = "&sort=" + str(sort) 
+	if table_id != -0:
+		code += "&table_id=" + str(table_id)
+	return await connect_api("scores/get-rank",false,SCORES,code)
+
+func scores_table():
+	return await connect_api("scores/tables",false,SCORES)
+
+func time_server():
+	return await connect_api("time", false, TIME)
+
+func trophy_achieved(achieved:bool):
+	var code = ""
+	code = "&achieved=" + str(achieved)
+	return await connect_api("trophies",true,TROPHY,code)
+
+func trophy_add(trophy_id: int):
+	var code = "&trophy_id=" + str(trophy_id)
+	return await connect_api("trophies/add-achieved",true,TROPHY, code)
+
+func trophies_info(trophy_id:=0):
+	var code = ""
+	if trophy_id != 0:
+		code = "&trophy_id=" + str(trophy_id)
+	return await connect_api("trophies",true,TROPHY,code)
+
+func trophy_remove(trophy_id: int):
+	var code = "&trophy_id=" + str(trophy_id)
+	return await connect_api("trophies/remove-achieved",true,TROPHY, code)
 
 func user_auth(username: String, user_token: String):
 	var code = "&username=" + username + "&user_token=" + user_token
