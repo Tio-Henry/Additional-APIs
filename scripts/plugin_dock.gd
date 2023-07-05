@@ -2,7 +2,7 @@
 extends Control
 
 func _ready():
-	if FileAccess.file_exists("res://_info.cfg"):
+	if FileAccess.file_exists(_SaveCFG._file_cfg):
 		_SaveCFG._load_cfg()
 		$gamejolt_ui/PanelContainer/game_id/LineEdit.text = _SaveCFG.gamejolt_info["game_id"]
 		$gamejolt_ui/PanelContainer/private_key/LineEdit.text = _SaveCFG.gamejolt_info["private_key"]

@@ -2,7 +2,7 @@
 extends Node
 
 var _config = ConfigFile.new()
-var _file_cfg: String = "res://_info.cfg"
+var _file_cfg: String = "res://addons/info.cfg"
 var gamejolt_info = {
 	"game_id" : "",
 	"private_key" : ""
