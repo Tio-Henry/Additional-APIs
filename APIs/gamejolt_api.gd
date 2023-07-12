@@ -1,14 +1,17 @@
 extends Node
+
 var data_user: Dictionary = {
 	"username":"",
 	"user_token":"",
 	"user_id" : 0
 }
+
 var user_file: String = "user://gj-credentials.dat"
-enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS}
+enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS, OTHER}
 
 func _ready():
-	_SaveCFG.load_cfg()
+	if FileAccess.file_exists(SaveCFG.file_cfg):
+		SaveCFG.data_load(SaveCFG.sys_data,SaveCFG.file_cfg)
 	if FileAccess.file_exists(".gj-credentials"):
 		var file = FileAccess.open(".gj-credentials",FileAccess.READ)
 		var data = {}
@@ -133,24 +136,24 @@ func user_login(username: String, user_token: String):
 		data_user["user_token"] = user_token
 		var data = await username_fetch(username)
 		data_user["user_id"] = data["id"]
-		_SaveCFG.data_save(data_user,user_file)
+		SaveCFG.data_save(data_user,user_file)
 		return true
 	else:
 		return false
 
 func connect_api(type: String, require_user: bool, action_type, code:= ""):
-	if FileAccess.file_exists(_SaveCFG.file_cfg):
-		if _SaveCFG.gamejolt_info["game_id"] == "" or _SaveCFG.gamejolt_info["private_key"] == "":
+	if FileAccess.file_exists(SaveCFG.file_cfg):
+		if SaveCFG.sys_data["gj"]["game_id"] == "" or SaveCFG.sys_data["gj"]["private_key"] == "" or FileAccess.file_exists(SaveCFG.file_cfg) == false:
 			printerr("To use the Game Jolt API it is necessary to inform the Game ID and Private Key of your Game Jolt project page in Project Settings > Additional APIs > Game Jolt.")
 		else:
-			var LINK = "https://api.gamejolt.com/api/game/v1_2/" + type + "/?game_id=" + _SaveCFG.gamejolt_info["game_id"]
+			var LINK = "https://api.gamejolt.com/api/game/v1_2/" + type + "/?game_id=" + SaveCFG.sys_data["gj"]["game_id"]
 			if require_user == true:
-				if data_user["username"] != "" or data_user["user_token"] != "" or FileAccess.file_exists(_SaveCFG.file_cfg) == false:
+				if data_user["username"] != "" or data_user["user_token"] != "" or FileAccess.file_exists(user_file) == false:
 					LINK += "&username=" + data_user["username"] + "&user_token=" + data_user["user_token"]
 				else:
 					printerr("Username and User Token is required for this function!")
 			LINK += code
-			var LINK_WITH_KEY: String = LINK + _SaveCFG.gamejolt_info["private_key"]
+			var LINK_WITH_KEY: String = LINK + SaveCFG.sys_data["gj"]["private_key"]
 			var LINK_COMPLETE = LINK + "&signature=" + LINK_WITH_KEY.sha1_text()
 			return await connect_web(LINK_COMPLETE, action_type)
 	else:
@@ -204,6 +207,8 @@ func data_processing(data, action_type):
 					response_data = response.success
 			FRIENDS:
 					response_data = response.friends
+			OTHER:
+				response_data = response
 		return response_data
 	else:
 		if response.has("message") == true:
