@@ -7,7 +7,7 @@ var data_user: Dictionary = {
 }
 
 var user_file: String = "user://gj-credentials.dat"
-enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS, OTHER}
+enum {USER, DATA_STORE, TROPHY, SESSIONS, TIME, SCORES, FRIENDS, OTHER, IMG}
 
 func _ready():
 	if FileAccess.file_exists(SaveCFG.file_cfg):
@@ -22,6 +22,14 @@ func _ready():
 		if FileAccess.file_exists(user_file):
 			var file = FileAccess.open(user_file,FileAccess.READ)
 			data_user = file.get_var()
+			
+
+
+func check_internet() -> bool:
+	if str(await time_server()) == "error":
+		return false
+	else:
+		return true
 
 func data_fetch(require_user: bool,key: String):
 	var code = "&key=" + key
@@ -130,7 +138,7 @@ func user_id_fetch(user_id: int):
 	var code = "&user_id=" + str(user_id)
 	return await connect_api("users", false, USER, code)
 
-func user_login(username: String, user_token: String):
+func user_login(username: String, user_token: String) -> bool:
 	if await user_auth(username, user_token) == "true":
 		data_user["username"] = username
 		data_user["user_token"] = user_token
@@ -168,49 +176,53 @@ func connect_web(LINK, action_type):
 	return data_processing(data,action_type)
 
 func data_processing(data, action_type):
-	var json_data = JSON.parse_string(data[3].get_string_from_utf8())
-	var response: Dictionary = json_data["response"]
-	if response["success"] == "true":
-		var response_data
-		match action_type:
-			USER:
-				if response.has("users") == true:
-					response_data = response.users[0]
-				else:
-					response_data = response.success
-			DATA_STORE:
-				response_data = response
-				if response.has("data") == true:
-					response_data = response.data
-				if response.has("keys") == true:
-					response_data = response.keys
-				if response.size() == 1:
-					response_data = response.success
-			TROPHY:
-				if response.has("trophies") == true:
-					response_data = response.trophies
-				else:
-					response_data = response.success
-			SESSIONS:
-					response_data = response.success
-			TIME:
+	if data[0] == 0:
+		var json_data = JSON.parse_string(data[3].get_string_from_utf8())
+		var response: Dictionary = json_data["response"]
+		if response["success"] == "true":
+			var response_data
+			match action_type:
+				USER:
+					if response.has("users") == true:
+						response_data = response.users[0]
+					else:
+						response_data = response.success
+				DATA_STORE:
 					response_data = response
-					response_data.erase("success")
-			SCORES:
-				if response.has("scores") == true:
-					response_data = response.scores
-				if response.has("rank") == true:
-					response_data = response.rank
-				if response.has("tables") == true:
-					response_data = response.tables
-				if response.size() == 1:
-					response_data = response.success
-			FRIENDS:
-					response_data = response.friends
-			OTHER:
-				response_data = response
-		return response_data
+					if response.has("data") == true:
+						response_data = response.data
+					if response.has("keys") == true:
+						response_data = response.keys
+					if response.size() == 1:
+						response_data = response.success
+				TROPHY:
+					if response.has("trophies") == true:
+						response_data = response.trophies
+					else:
+						response_data = response.success
+				SESSIONS:
+						response_data = response.success
+				TIME:
+						response_data = response
+						response_data.erase("success")
+				SCORES:
+					if response.has("scores") == true:
+						response_data = response.scores
+					if response.has("rank") == true:
+						response_data = response.rank
+					if response.has("tables") == true:
+						response_data = response.tables
+					if response.size() == 1:
+						response_data = response.success
+				FRIENDS:
+						response_data = response.friends
+				OTHER:
+					response_data = response
+			return response_data
+		else:
+			if response.has("message") == true:
+				printerr(response.message)
+			return response["success"]
 	else:
-		if response.has("message") == true:
-			printerr(response.message)
-		return response["success"]
+		printerr("Connection error",", code: " + str(data[0]))
+		return "error"
