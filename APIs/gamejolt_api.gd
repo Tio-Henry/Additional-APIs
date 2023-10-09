@@ -22,8 +22,6 @@ func _ready():
 		if FileAccess.file_exists(user_file):
 			var file = FileAccess.open(user_file,FileAccess.READ)
 			data_user = file.get_var()
-			
-
 
 func check_internet() -> bool:
 	if str(await time_server()) == "error":
@@ -139,7 +137,7 @@ func user_id_fetch(user_id: int):
 	return await connect_api("users", false, USER, code)
 
 func user_login(username: String, user_token: String) -> bool:
-	if await user_auth(username, user_token) == "true":
+	if await user_auth(username, user_token) == true:
 		data_user["username"] = username
 		data_user["user_token"] = user_token
 		var data = await username_fetch(username)
@@ -186,7 +184,10 @@ func data_processing(data, action_type):
 					if response.has("users") == true:
 						response_data = response.users[0]
 					else:
-						response_data = response.success
+						if response.success == "true":
+							response_data = true
+						else:
+							response_data = false
 				DATA_STORE:
 					response_data = response
 					if response.has("data") == true:
@@ -194,14 +195,23 @@ func data_processing(data, action_type):
 					if response.has("keys") == true:
 						response_data = response.keys
 					if response.size() == 1:
-						response_data = response.success
+						if response.success == "true":
+							response_data = true
+						else:
+							response_data = false
 				TROPHY:
 					if response.has("trophies") == true:
 						response_data = response.trophies
 					else:
-						response_data = response.success
+						if response.success == "true":
+							response_data = true
+						else:
+							response_data = false
 				SESSIONS:
-						response_data = response.success
+						if response.success == "true":
+							response_data = true
+						else:
+							response_data = false
 				TIME:
 						response_data = response
 						response_data.erase("success")
@@ -213,7 +223,10 @@ func data_processing(data, action_type):
 					if response.has("tables") == true:
 						response_data = response.tables
 					if response.size() == 1:
-						response_data = response.success
+						if response.success == "true":
+							response_data = true
+						else:
+							response_data = false
 				FRIENDS:
 						response_data = response.friends
 				OTHER:
@@ -222,7 +235,10 @@ func data_processing(data, action_type):
 		else:
 			if response.has("message") == true:
 				printerr(response.message)
-			return response["success"]
+			if response.success == "true":
+				return true
+			else:
+				return false
 	else:
 		printerr("Connection error",", code: " + str(data[0]))
 		return "error"
